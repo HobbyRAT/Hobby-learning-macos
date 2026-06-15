@@ -91,12 +91,9 @@ jobs:
           echo "=== NODE.JS ==="
           node --version || echo "Node.js nicht installiert"
 
-            - name: 🚀 Performance Benchmark - M-Chip
+      - name: 🚀 Performance Benchmark - M-Chip
         run: |
-          echo "=== GEEKBENCH-STYLE QUICK TEST ==="
-          echo "Messungszeit für einfache Operationen:"
-          echo ""
-          echo "CPU Single-Core Test (Primzahlen):"
+          echo "=== CPU SINGLE-CORE TEST ==="
           python3 << 'EOF'
           def is_prime(n):
               if n < 2: return False
@@ -106,10 +103,6 @@ jobs:
           primes = [n for n in range(2, 100000) if is_prime(n)]
           print(f'Gefundene Primzahlen: {len(primes)}')
           EOF
-          echo ""
-          echo "Disk I/O Test:"
-          dd if=/dev/zero of=/tmp/test-file bs=1m count=100 2>&1 | tail -1
-          rm /tmp/test-file
 
       - name: 🔐 Security & Signing Features
         run: |
@@ -127,13 +120,10 @@ jobs:
           echo "=== NETWORK INTERFACES ==="
           ifconfig | grep -E "^[a-z]|inet " | head -10
           echo ""
-          echo "=== DNS RESOLVER ==="
-          scutil --dns | head -15 || echo "DNS Info nicht vollständig verfügbar"
-          echo ""
           echo "=== SYSTEM UPTIME ==="
           uptime
 
-      - name: 📊 Comparison: M-Chip vs Intel vs Linux
+      - name: 📊 M-Chip Vorteile
         run: |
           echo "=== M-CHIP VORTEILE ==="
           echo "✅ ARM64 Native Architecture"
@@ -142,26 +132,5 @@ jobs:
           echo "✅ Weniger Stromverbrauch"
           echo "✅ Bessere Wärmemanagement"
           echo ""
-          echo "=== AKTUELLE RUNNER ARCHITEKTUR ==="
+          echo "=== RUNNER ARCHITEKTUR ==="
           uname -m
-          echo ""
-          echo "✨ Du lernst gerade auf echtem Apple Silicon!"
-
-      - name: 📝 Zusammenfassung & Export
-        run: |
-          echo "=== LERN-ZUSAMMENFASSUNG ==="
-          echo "Repository: HobbyRAT/Hobby-learning-macos"
-          echo "Workflow: macOS M-Chip Exploration"
-          echo "Runner: macos-latest (Apple Silicon M-Chip)"
-          echo ""
-          echo "🎯 Was du gelernt hast:"
-          echo "1. macOS System-Architektur (ARM64)"
-          echo "2. M-Chip Hardware-Spezifikationen"
-          echo "3. Entwicklungs-Tools & Ökosystem"
-          echo "4. Homebrew Package Manager"
-          echo "5. Performance vs Intel Vergleich"
-          echo ""
-          echo "📚 Nächste Schritte:"
-          echo "- Weitere Workflows hinzufügen"
-          echo "- Spezifische macOS-Features erkunden"
-          echo "- Mit Swift oder Xcode experimentieren"
