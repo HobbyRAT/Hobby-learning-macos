@@ -1,0 +1,167 @@
+name: macOS M-Chip Exploration
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  m-chip-discovery:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🖥️ System Information - Architektur
+        run: |
+          echo "=== ARCHITEKTUR ==="
+          uname -a
+          uname -m
+          echo ""
+          echo "=== PROZESSOR INFO ==="
+          sysctl -n machdep.cpu.brand_string
+          sysctl -n machdep.cpu.cores_per_package
+          sysctl -n machdep.cpu.thread_count
+
+      - name: 🍎 macOS Version & Details
+        run: |
+          echo "=== macOS VERSION ==="
+          sw_vers
+          echo ""
+          echo "=== BUILD INFO ==="
+          sw_vers -buildVersion
+          echo ""
+          echo "=== KERNEL VERSION ==="
+          uname -r
+
+      - name: 💾 Hardware - CPU, Memory, GPU
+        run: |
+          echo "=== CPU DETAILS ==="
+          sysctl hw.ncpu
+          sysctl hw.physicalcpu
+          sysctl hw.logicalcpu
+          echo ""
+          echo "=== MEMORY ==="
+          sysctl hw.memsize | awk '{printf "RAM: %.2f GB\n", $NF / (1024^3)}'
+          echo ""
+          echo "=== GPU INFO ==="
+          system_profiler SPDisplaysDataType 2>/dev/null | grep -A 5 "Chipset Model" || echo "GPU Info via system_profiler"
+
+      - name: 🔍 M-Chip spezifische Features
+        run: |
+          echo "=== M-CHIP SPEZIFIKATIONEN ==="
+          echo "Performance Cores (P-Cores):"
+          sysctl -n hw.perflevel0.physicalcpu || echo "Info nicht verfügbar auf dieser Version"
+          echo ""
+          echo "Efficiency Cores (E-Cores):"
+          sysctl -n hw.perflevel1.physicalcpu || echo "Info nicht verfügbar auf dieser Version"
+          echo ""
+          echo "=== ARM64 NATIVE ARCHITECTURE ==="
+          arch
+          echo ""
+          echo "=== AVAILABLE ARCHITECTURES ==="
+          file /bin/bash
+
+      - name: 📦 Homebrew & Package Manager
+        run: |
+          echo "=== HOMEBREW INFO ==="
+          brew --version
+          brew config
+          echo ""
+          echo "=== INSTALLED BREW PACKAGES (TOP 20) ==="
+          brew list | head -20
+
+      - name: 🔧 Entwicklungs-Tools
+        run: |
+          echo "=== GIT ==="
+          git --version
+          echo ""
+          echo "=== XCODE ==="
+          xcode-select --version
+          echo ""
+          echo "=== RUBY ==="
+          ruby --version || echo "Ruby nicht installiert"
+          echo ""
+          echo "=== PYTHON ==="
+          python3 --version || echo "Python3 nicht installiert"
+          echo ""
+          echo "=== NODE.JS ==="
+          node --version || echo "Node.js nicht installiert"
+
+      - name: 🚀 Performance Benchmark - M-Chip
+        run: |
+          echo "=== GEEKBENCH-STYLE QUICK TEST ==="
+          echo "Messungszeit für einfache Operationen:"
+          echo ""
+          echo "CPU Single-Core Test (Primzahlen):"
+          time python3 -c "
+          def is_prime(n):
+              if n < 2: return False
+              for i in range(2, int(n**0.5) + 1):
+                  if n % i == 0: return False
+              return True
+          primes = [n for n in range(2, 100000) if is_prime(n)]
+          print(f'Gefundene Primzahlen: {len(primes)}')
+          "
+          echo ""
+          echo "Disk I/O Test:"
+          dd if=/dev/zero of=/tmp/test-file bs=1m count=100 2>&1 | tail -1
+          rm /tmp/test-file
+
+      - name: 🔐 Security & Signing Features
+        run: |
+          echo "=== CODESIGN AVAILABILITY ==="
+          codesign --version || echo "Codesign nicht verfügbar"
+          echo ""
+          echo "=== NOTARIZATION & GATEKEEPER ==="
+          spctl --status || echo "Spctl nicht verfügbar"
+          echo ""
+          echo "=== SYSTEM INTEGRITY PROTECTION (SIP) ==="
+          csrutil status || echo "CSR Info nicht verfügbar in GitHub Actions"
+
+      - name: 🌐 Network & System Tools
+        run: |
+          echo "=== NETWORK INTERFACES ==="
+          ifconfig | grep -E "^[a-z]|inet " | head -10
+          echo ""
+          echo "=== DNS RESOLVER ==="
+          scutil --dns | head -15 || echo "DNS Info nicht vollständig verfügbar"
+          echo ""
+          echo "=== SYSTEM UPTIME ==="
+          uptime
+
+      - name: 📊 Comparison: M-Chip vs Intel vs Linux
+        run: |
+          echo "=== M-CHIP VORTEILE ==="
+          echo "✅ ARM64 Native Architecture"
+          echo "✅ Unified Memory Architecture"
+          echo "✅ Performance + Efficiency Cores"
+          echo "✅ Weniger Stromverbrauch"
+          echo "✅ Bessere Wärmemanagement"
+          echo ""
+          echo "=== AKTUELLE RUNNER ARCHITEKTUR ==="
+          uname -m
+          echo ""
+          echo "✨ Du lernst gerade auf echtem Apple Silicon!"
+
+      - name: 📝 Zusammenfassung & Export
+        run: |
+          echo "=== LERN-ZUSAMMENFASSUNG ==="
+          echo "Repository: HobbyRAT/Hobby-learning-macos"
+          echo "Workflow: macOS M-Chip Exploration"
+          echo "Runner: macos-latest (Apple Silicon M-Chip)"
+          echo ""
+          echo "🎯 Was du gelernt hast:"
+          echo "1. macOS System-Architektur (ARM64)"
+          echo "2. M-Chip Hardware-Spezifikationen"
+          echo "3. Entwicklungs-Tools & Ökosystem"
+          echo "4. Homebrew Package Manager"
+          echo "5. Performance vs Intel Vergleich"
+          echo ""
+          echo "📚 Nächste Schritte:"
+          echo "- Weitere Workflows hinzufügen"
+          echo "- Spezifische macOS-Features erkunden"
+          echo "- Mit Swift oder Xcode experimentieren"
