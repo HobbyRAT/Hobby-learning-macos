@@ -91,7 +91,7 @@ jobs:
           echo "=== NODE.JS ==="
           node --version || echo "Node.js nicht installiert"
 
-      - name: 🚀 Performance Benchmark - M-Chip
+            - name: 🚀 Performance Benchmark - M-Chip
         run: |
           echo "=== GEEKBENCH-STYLE QUICK TEST ==="
           echo "Messungszeit für einfache Operationen:"
