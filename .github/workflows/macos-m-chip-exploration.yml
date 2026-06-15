@@ -97,7 +97,7 @@ jobs:
           echo "Messungszeit für einfache Operationen:"
           echo ""
           echo "CPU Single-Core Test (Primzahlen):"
-          time python3 -c "
+          python3 << 'EOF'
           def is_prime(n):
               if n < 2: return False
               for i in range(2, int(n**0.5) + 1):
@@ -105,7 +105,7 @@ jobs:
               return True
           primes = [n for n in range(2, 100000) if is_prime(n)]
           print(f'Gefundene Primzahlen: {len(primes)}')
-          "
+          EOF
           echo ""
           echo "Disk I/O Test:"
           dd if=/dev/zero of=/tmp/test-file bs=1m count=100 2>&1 | tail -1
